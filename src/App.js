@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-function App() {
+export default function App() {
+  const [questions, setQuestions] = useState([]);
+  const getQuestions = async () => {
+    try {
+      const { data } = await axios.get('https://selq.store/api/questions');
+      console.log('DATA', data.body.data);
+      setQuestions(data?.body.data);
+    } catch (error) {
+      console.log('ERROR', error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestions();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>질문</h1>
+      {questions?.map((question, index) => (
+        <h1 key={index}>{question.question}</h1>
+      ))}
     </div>
   );
 }
-
-export default App;
